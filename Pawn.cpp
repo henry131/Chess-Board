@@ -1,12 +1,8 @@
 /*---------------------------------------------------------
-Last Edited: 26th November 2015
+Last Edited: 9th December 2015
 Author: Henry Williams, hw5115, 01141713
 Description: Pawn Class
 ---------------------------------------------------------*/
-
-#include <iostream>
-
-using namespace std;
 
 #include "Pawn.h"
 #include "Piece.h"
@@ -18,34 +14,42 @@ Pawn::Pawn (bool color_white) : Piece (color_white)
 	type = pawn;
 }
 
+//Destructor
+
 Pawn::~Pawn ()
 {
 	//blank
 }
 
-bool Pawn::valid_move (const char* start, const char* end, bool taking)
+//Checks move is valid according to position's standard chess rules
+
+bool Pawn::valid_move (const char* start, const char* end, bool t)
 {
 	int max_length = 1;
 	
-	//If pawn still hasn't moved then it can move two rows (if not taking)
-	if (first_move && !taking)
+	//If pawn's first move then can move two rows (if not taking)
+	if (first_move && !t)
 		max_length = 2;
 
 	//Check column movement
-	if (taking)
+	
+	if (t)
 	{
-		//If taking, must move to adjacent column
+		//If taking, must move to adjacent column otherwise invalid
 		if (!(end[0] == (start[0] + 1) || end[0] == (start[0] - 1)))
 			return false;
 	}
 	else
 	{
-		//If not taking, must stay in same column	
+		//If not taking, must stay in same column	otherwise invalid
 		if (end[0] != start[0])
 			return false;
 	}
 	
 	//Check row movement
+	//for white, must move "up" board (end - start)
+	//for black, must move "down" board (start - end)
+	
 	if (white_color)
 	{
 		if ((end[1] - start[1]) > max_length || (end[1] - start[1]) <= 0)
@@ -57,5 +61,6 @@ bool Pawn::valid_move (const char* start, const char* end, bool taking)
 				return false;
 	}
 	
+	//Default case: valid move
 	return true;
 }

@@ -4,17 +4,18 @@
 #include "Piece.h"
 
 class Pawn : public Piece {
-private:
 public:
 
-	//CONSTURUCTOR
+	//CONSTURUCTOR - SETS TYPE TO pawn
 	Pawn (bool white_color);
 
+	//VIRTUAL DESTRUCTOR
 	~Pawn ();
 
-	bool valid_move (const char* start, const char* end, bool taking);
+	//VIRTUAL
+	//DOES start TO end MOVE (TAKING = t), CONFORM WITH PIECE RULES
+	bool valid_move (const char* start, const char* end, bool t);
 	
-	//void print ();
 };
 
 #endif /*PAWN_H*/

@@ -1,12 +1,8 @@
 /*---------------------------------------------------------
-Last Edited: 26th November 2015
+Last Edited: 9th December 2015
 Author: Henry Williams, hw5115, 01141713
 Description: Castle Class
 ---------------------------------------------------------*/
-
-#include <iostream>
-
-using namespace std;
 
 #include "Castle.h"
 #include "Piece.h"
@@ -18,19 +14,25 @@ Castle::Castle (bool white_color) : Piece (white_color)
 	type = castle;
 }
 
+//Destructor
+
 Castle::~Castle ()
 {
 	//blank
 }
 
-bool Castle::valid_move (const char* start, const char* end, bool taking)
+//Checks move is valid according to position's standard chess rules
+
+bool Castle::valid_move (const char* start, const char* end, bool t)
 {
-	//Straight along column
+	//Straight along column: valid
 	if (start[0] == end[0])
 		return true;
-	//Straight along row
+		
+	//Straight along row: valid
 	if (start[1] == end[1])
 		return true;
 	
+	//Default case: invalid move
 	return false;
 }

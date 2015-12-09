@@ -1,12 +1,8 @@
 /*---------------------------------------------------------
-Last Edited: 26th November 2015
+Last Edited: 9th December 2015
 Author: Henry Williams, hw5115, 01141713
 Description: Bishop Class
 ---------------------------------------------------------*/
-
-#include <iostream>
-
-using namespace std;
 
 #include "Bishop.h"
 #include "Piece.h"
@@ -18,18 +14,22 @@ Bishop::Bishop (bool white_color) : Piece (white_color)
 	type = bishop;
 }
 
+//Destructor
+
 Bishop::~Bishop ()
 {
 	//blank
 }
 
-bool Bishop::valid_move (const char* start, const char* end, bool taking)
+//Checks move is valid according to position's standard chess rules
+
+bool Bishop::valid_move (const char* start, const char* end, bool t)
 {
+	//Initialise i to start position
 	char i[3];
 	i[0] = start[0];
 	i[1] = start[1];
 	i[2] = '\0';
-
 	
 	//Diagonal "up" right
 	if (start[0] < end[0] && start[1] < end[1])
@@ -78,6 +78,8 @@ bool Bishop::valid_move (const char* start, const char* end, bool taking)
 				return true;
 		}
 	}
+	
+	//Default case: invalid move
 	return false;
 }
 

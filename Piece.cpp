@@ -1,14 +1,10 @@
 /*---------------------------------------------------------
-Last Edited: 26th November 2015
+Last Edited: 9th December 2015
 Author: Henry Williams, hw5115, 01141713
 Description: (Chess) Piece Class
 ---------------------------------------------------------*/
 
-#include <iostream>
 #include <cstring>
-#include <map>
-
-using namespace std;
 
 #include "Piece.h"
 
@@ -21,12 +17,29 @@ Piece::Piece (bool color)
 	first_move = true;
 }
 
-//Get Color Function
+//Returns first_move bool (used to monitor pawn 2 vs 1 squares)
+
+bool Piece::check_first_move ()
+{
+	return first_move;
+}
+
+//Sets first_move to false (used to monitor pawn 2 vs 1 squares)
+
+void Piece::not_first_move ()
+{
+	first_move = false;
+}
+
+//Returns white_color bool
 
 bool Piece::get_white_color () const
 {
 	return white_color;
 }
+
+//Returns string representation of piece based on classification
+//e.g."King"
 
 string Piece::get_type () const
 {
@@ -50,35 +63,4 @@ string Piece::get_type () const
 	}
 	return "";//Should never get here
 }
-
-bool Piece::check_first_move ()
-{
-	return first_move;
-}
-
-void Piece::not_first_move ()
-{
-	first_move = false;
-}
-
-void Piece::print () const
-{
-	if (white_color)
-	{
-		cout << "w";
-	}
-	else
-	{
-		cout << "b";
-	}
-	cout << type;
-}
-/*
-ostream& operator << (ostream& out, const Piece& p)
-{
-
-}
-*/
-
-
 

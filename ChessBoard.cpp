@@ -1,5 +1,5 @@
 /*---------------------------------------------------------
-Last Edited: 26th November 2015
+Last Edited: 9th December 2015
 Author: Henry Williams, hw5115, 01141713
 Description: ChessBoard Class
 ---------------------------------------------------------*/
@@ -8,6 +8,7 @@ Description: ChessBoard Class
 #include <cstring>
 #include <map>
 
+#include "ChessBoard.h"
 #include "Piece.h"
 #include "Pawn.h"
 #include "King.h"
@@ -16,56 +17,56 @@ Description: ChessBoard Class
 #include "Knight.h"
 #include "Castle.h"
 
-
 using namespace std;
 
-#include "ChessBoard.h"
-
-//Constructor
+//Constructor: call private configure function
 
 ChessBoard::ChessBoard ()
 {
 	configure ();
 }
 
-//Destructor: default
+//Destructor: call private delete pieces function (empty heap)
 
 ChessBoard::~ChessBoard ()
 {
 	delete_pieces();
 }
 
-//Delete Pieces
+//Delete Pieces, frees the memory on the heap and clears board
 
 void ChessBoard::delete_pieces ()
 {
-	//delete memory and clear board
+	//Free memory on heap
 	for (it_type iter = board.begin(); iter != board.end(); iter++)
 	{
 				delete iter->second;
 	}
+	//Remove all destroyed elements from map container
+	board.clear();
 }
 
 
-//Reset Board
+//Resets Board from current to standard starting condition
 
 void ChessBoard::resetBoard ()
 {
 	//Delete the board contents 
 	delete_pieces();
-	//Remove all destroyed elements from map container
-	board.clear();
 	//Reconfigure board
 	configure();
 }
 
-//Configure
+//Configures the chess board to standard starting condition
+//map board<string,Piece*> holds contents of board
+//squares with no pieces on set to NULL
+
 void ChessBoard::configure ()
 {
 	char i[3];
 	i[2] = '\0';
 
-	//white pieces (true means white)
+	//white pieces (passing true to constructor means white)
 	board["A1"] = new Castle(true);
 	board["B1"] = new Knight(true);
 	board["C1"] = new Bishop(true);
@@ -81,7 +82,7 @@ void ChessBoard::configure ()
 		board[i] = new Pawn(true);
 	}
 
-	//black pieces (false)
+	//black pieces (passing false to constructor)
 	board["A8"] = new Castle(false);
 	board["B8"] = new Knight(false);
 	board["C8"] = new Bishop(false);
@@ -119,6 +120,17 @@ void ChessBoard::configure ()
 	cout << "A new chess game is started!" << endl;
 }
 
+//Changes players turn
+
+void ChessBoard::change_turn ()
+{
+	(white_turn) ? white_turn = false : white_turn = true;
+}
+
+
+//Checks the square input is valid ("A1" to "H8")
+//Called in submit_move()
+
 bool ChessBoard::check_squares (const char* square) const
 {	
 	if (square[2] != '\0')
@@ -142,6 +154,9 @@ bool ChessBoard::check_squares (const char* square) const
 	//If passes checks
 	return true;
 }
+
+//Checks if any pieces between start and end
+//Called in validate_move()
 
 bool ChessBoard::check_obstacles (const char* start, const char* end)
 {
@@ -253,7 +268,7 @@ bool ChessBoard::check_obstacles (const char* start, const char* end)
 	return true;
 }
 
-//Check Move
+//validation of move incl. conforming to piece movement restrictions
 
 bool ChessBoard::validate_move (const char* start, const char* end, bool t)
 {
@@ -263,15 +278,17 @@ bool ChessBoard::validate_move (const char* start, const char* end, bool t)
 
 	//Check if attempting to take own piece
 	if (t)
-		if ((board[start]->get_white_color() && board[end]->get_white_color())
-		 || (!board[start]->get_white_color() && !board[end]->get_white_color()))
+		if ((board[start]->get_white_color() && 
+		board[end]->get_white_color())
+		|| (!board[start]->get_white_color() &&
+		!board[end]->get_white_color()))
 			return false;
 	
 	//Validate movement type at Piece level
 	if (!board[start]->valid_move(start,end,t))
 		return false;
 	
-	//Check obstacle
+	//Check obstacles
 	if (board[start]->get_type() != "Knight") 
 		if (!check_obstacles(start,end))
 			return false;
@@ -280,7 +297,11 @@ bool ChessBoard::validate_move (const char* start, const char* end, bool t)
 	return true;
 }
 
-//Submit Move
+//Will make move from start to end if it is valid based on standard
+//rules of chess (excl. castling, en passant & pawn promotion)
+//If the move is invalid then an error message will be output
+//If the move is successful then the result will be output including
+//any pieces being taken and the current check/stale (-mate) status
 
 void ChessBoard::submitMove (const char* start, const char* end)
 {
@@ -327,17 +348,20 @@ void ChessBoard::submitMove (const char* start, const char* end)
 	}
 
 	//Check if attempting to take
+	
 	bool is_taking = false;
 	if (board[end] != NULL)
 		is_taking = true;
 	
 	//Validate move (helper function)
+	
 	bool valid_move = true;
 	valid_move = validate_move (start, end, is_taking);
 
-	//Would move result in current player's King being in check - invalid
+	//Would move result in player's King being in check - invalid
 	if(valid_move)
 	{
+		//"Update" board to result of move
 		Piece* temp = board[end];
 		board[end] = board[start];
 		board[start] = NULL;
@@ -345,10 +369,11 @@ void ChessBoard::submitMove (const char* start, const char* end)
 		//Find the King on the "updated" board
 		king = find_king(white_turn).c_str();
 		
-		//Does the "updated" board put the king in check
+		//If "updated" board puts king in check - Invalid move
 		if (king_in_check(white_turn, king))
 			valid_move = false;
-			
+
+		//Move board back
 		board[start] = board[end];
 		board[end] = temp;
 	}
@@ -377,11 +402,11 @@ void ChessBoard::submitMove (const char* start, const char* end)
 	}
 	cout << endl;
 	
-	//If not a valid move, exit here
+	//If not a valid move, exit function here
 	if (!valid_move)
 		return;
 	
-	//Make move: if taking, delete 
+	//Make move: if taking, delete Piece. Set start to NULL
 	if (is_taking)
 	{
 		 delete board[end];
@@ -389,18 +414,20 @@ void ChessBoard::submitMove (const char* start, const char* end)
 	board[end] = board[start];
 	board[start] = NULL;
 	
-	//If first move, change it (for Pawn 2 vs 1 squares)
+	//If Piece's first move, change it (for Pawn 2 vs 1 squares)
 	if (board[end]->check_first_move())
 		board[end]->not_first_move();
-	
-	//change turn and reset is_taking to default
+
+	//change turn and reset is_taking to default false
 	change_turn();
 	is_taking = false;
 
-	//check if other player in check or check/stale mate (if so, end game)
-	//if check
+	//check if other player in check or check/stale (-mate)
+	//game_over = true if either (-mate) satisfied
 
 	king = find_king(white_turn).c_str();
+
+	//check?
 
 	if (king_in_check(white_turn, king))
 	{
@@ -409,12 +436,18 @@ void ChessBoard::submitMove (const char* start, const char* end)
 		else
 			cout << "Black";
 		cout << " is in check";
+		
+		//check + stalemate? = checkmate
+		
 		if (stalemate(white_turn, king))
 		{
 			cout << "mate";
 			game_over = true;
 		}
 		cout << endl;
+		
+	//No check but stalemate?	
+		
 	} else if (stalemate(white_turn, king))
 	{
 		if (white_turn)
@@ -426,6 +459,8 @@ void ChessBoard::submitMove (const char* start, const char* end)
 	}
 }
 
+//Returns square location of king of colour white (true is white)
+
 string ChessBoard::find_king (bool white)
 {
 	for (it_type iter2 = board.begin(); iter2 != board.end(); iter2++)
@@ -435,9 +470,10 @@ string ChessBoard::find_king (bool white)
 			return iter2->first;
 		}
 	}
-	return "a"; //Error
+	return "error"; //Error, should never get here
 }
 
+//Checks if the king of colour white in position king is in check
 
 bool ChessBoard::king_in_check (bool white, const char* king)
 {
@@ -446,9 +482,12 @@ bool ChessBoard::king_in_check (bool white, const char* king)
 	bool is_taking = true;
 	
 	//Defensive error check
-	if (end[0] == 'a')
+	if (end[0] == 'e')
 		return false;
 
+	//Cycle through board checking if any pieces of opposing colour
+	//would be able to make a valid move to the king's square
+	
 	for (it_type iter3 = board.begin(); iter3 != board.end(); iter3++)
 	{
 		if (iter3->second != NULL)
@@ -463,8 +502,12 @@ bool ChessBoard::king_in_check (bool white, const char* king)
 		}
 	}
 	
+	//Default case, king not in check
 	return false;
 }
+
+//Checks if any valid move that does not result in king (square k)
+//of white colour being in check (irrelevant if king is in check)
 
 bool ChessBoard::stalemate (bool white, const char* k)
 {
@@ -475,50 +518,80 @@ bool ChessBoard::stalemate (bool white, const char* k)
 	bool stalemate = true;
 	Piece *temp2 = NULL;
 	
+	//Cycle through board
+	
 	for (it_type iter4 = board.begin(); iter4 != board.end(); iter4++)
-	{
+	{ 
+		
+		//Is piece of opposite colour - set as start square
+		
 		if (iter4->second != NULL && iter4->second->get_white_color() == white)
 		{
 			start = iter4->first.c_str();
-			for (it_type iter5 = board.begin(); iter5 != board.end(); iter5++)
+			
+			//Cycle through board again - set square as end square
+			
+			for (it_type iter5=board.begin(); iter5 != board.end(); iter5++)
 			{
 				is_taking = false;
 				end = iter5->first.c_str();
+				
+				//If end square isnt empty then piece is taking (incl. own)
+				
 				if (iter5->second != NULL)
 				{
 					is_taking = true;
 				}
+				
+				//Check if start to end is valid move
+				
 				if (validate_move(start,end,is_taking))
 				{
+
+					//"Update" board to result of move
+					
 					temp2 = board[end];
 					board[end] = board[start];
 					board[start] = NULL;
+					
+					//If  piece that has moved was king, king location is end
+					//Otherwise it is as passed as parameter
+					
 					if (board[end]->get_type() == "King")
 						king = end;
 					else
 						king = k;
+					
+					//If king not in check in "updated" board
+					//Valid move possible -> No stalemate
+					
 					if (!king_in_check(white, king))
 					{
 						stalemate = false;
 					}
+					
+					//Move board back
+					
 					board[start] = board[end];
 					board[end] = temp2;
 				}
+				
+				//If a single valid move possible -> no stalemate, exit
+				
 				if (stalemate == false)
 				{
 					return false;
 				}
+				
 			}
 		}
 	}
+	
+	//Default case: no valid move found -> stalemate
 	return stalemate;
 }
 
-void ChessBoard::change_turn ()
-{
-	(white_turn) ? white_turn = false : white_turn = true;
-}
-
+//Prints (cout) setup of board (for debugging only)
 
 void ChessBoard::print ()
 {

@@ -1,12 +1,8 @@
 /*---------------------------------------------------------
-Last Edited: 26th November 2015
+Last Edited: 9th December 2015
 Author: Henry Williams, hw5115, 01141713
 Description: Queen Class
 ---------------------------------------------------------*/
-
-#include <iostream>
-
-using namespace std;
 
 #include "Queen.h"
 #include "Piece.h"
@@ -18,26 +14,30 @@ Queen::Queen (bool white_color) : Piece (white_color)
 	type = queen;
 }
 
+//Destructor
+
 Queen::~Queen ()
 {
 	//blank
 }
 
-bool Queen::valid_move (const char* start, const char* end, bool taking)
+//Checks move is valid according to position's standard chess rules
+
+bool Queen::valid_move (const char* start, const char* end, bool t)
 {
-	char i[3];
-	i[2] = '\0';
-	
-	//Straight along column
+	//Straight along column is valid
 	if (start[0] == end[0])
 		return true;
-	//Straight along row
+		
+	//Straight along row is valid
 	if (start[1] == end[1])
 		return true;
 	
 	//Set i to be at start
+	char i[3];
 	i[0] = start[0];
 	i[1] = start[1];
+	i[2] = '\0';
 	
 	//Diagonal "up" right
 	if (start[0] < end[0] && start[1] < end[1])
@@ -86,6 +86,8 @@ bool Queen::valid_move (const char* start, const char* end, bool taking)
 				return true;
 		}
 	}
+	
+	//Default case: not valid move
 	return false;
 }
 

@@ -4,16 +4,17 @@
 #include "Piece.h"
 
 class Knight : public Piece {
-private:
-
 public:
 	
-	//Constructor
+	//CONSTRUCTOR - SETS TYPE TO Knight
 	Knight (bool white_color);
 	
+	//VIRTUAL DESTRUCTOR
 	~Knight ();
 	
-	bool valid_move (const char* start, const char* end, bool taking);
+	//VIRTUAL
+	//DOES start TO end MOVE (TAKING = t), CONFORM WITH PIECE RULES
+	bool valid_move (const char* start, const char* end, bool t);
 
 };
 

@@ -4,7 +4,7 @@ Course: C++ Programming - Assessed Exercise No.3
 Deadline: 14th December 2015
 
 Date Started: 26th November 2015
-Last Edited: 26th November 2015
+Last Edited: 9th December 2015
 Author: Henry Williams, hw5115, 01141713
 Description: Main function
 -------------------------------------------------------------------*/
@@ -127,7 +127,7 @@ int main() {
     cout << endl;
     
     cout << "============================" << endl;
-    cout << "        Stalemate Test      " << endl;
+    cout << "        Stalemate Test" << endl;
     cout << "============================" << endl;
     cout << endl;
 
@@ -164,7 +164,7 @@ int main() {
     cb.submitMove("D6", "D2");	// capture w pawn with b queen - check
     cout << endl;				
     
-    cb.submitMove("E1", "D2"); // capture b queen with w king diagonally
+    cb.submitMove("E1", "D2"); // capture b queen with w king
     cout << endl;
     
     cb.submitMove("E5", "E4"); // move b pawn one space
@@ -182,7 +182,7 @@ int main() {
     cb.submitMove("F8", "B4"); // capture w pawn with b bishop 
     cout << endl;
     
-    cb.submitMove("C3", "D5"); // CANT move knight (puts king in check)
+    cb.submitMove("C3", "D5"); // CANT move knight (puts k in check)
     cout << endl;
     
     cb.submitMove("B2", "B4"); // take bishop with w rook

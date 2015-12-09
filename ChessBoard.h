@@ -11,52 +11,54 @@ typedef map<string,Piece*> ::iterator it_type;
 class ChessBoard {
 private:
 	
-	//ATTRIBUTES
+	/**ATTRIBUTES**/
 	
 	map < string , Piece* > board;
 	bool game_over;
 	bool is_taking;
 	bool white_turn;
 	
-	//DELETE POINTERS ETC
+	//FREE MEMORY ON HEAP AND CLEAR BOARD
 	void delete_pieces ();
 	
 	//CONFIGURE BOARD WITH STARTING CHESS CONFIG
 	void configure ();
 	
-	//CHANGE PLAYERS TURN BOOL
+	//CHANGE PLAYERS TURN
 	void change_turn();
 	
-	//VALIDATES A MOVE BASED ON PIECE'S ABILITY
-	bool validate_move (const char* start, const char* end, bool t);
-	
-	//CHECK VALIDITY OF SQUARE INPUT
+	//CHECK VALIDITY OF square INPUT
 	bool check_squares (const char* square) const;
 	
-	//CHECK OBSTACLES IN WAY OF VALID PIECE MOVE
+	//ANY OTHER PIECES BETWEEN start AND end MAKING MOVE INVALID
 	bool check_obstacles (const char* start, const char* end);
 	
-	//LOCATE THE KING POSITION
+	//IS start TO end A VALID MOVE FOR PIECE (TAKING OR NOT (t))
+	bool validate_move (const char* start, const char* end, bool t);
+	
+	//RETURNS white PLAYER'S KING POSITION
 	string find_king (bool white);
 	
-	//CHECK WHETHER MOVE PUTS OWN KING IN CHECK
+	//CAN white PLAYER'S KING (ON SQUARE k) BE "TAKEN" NEXT GO
 	bool king_in_check (bool white, const char* king);
 	
-	//CHECK WHETHER PLAYER CAN MAKE A MOVE THAT DOES NOT LEAVE KING IN CHECK
+	//CAN white MOVE WITHOUT PUTTING KING (ON SQUARE k) IN CHECK
 	bool stalemate (bool white, const char* k);
 	
 public:
 
-	//CONSTRUCTOR
+	//CONSTRUCTOR - CONFIGURES BOARD TO STARTING POSITION
 	ChessBoard ();
 
-	//DESTRUCTOR
+	//DESTRUCTOR - FREES HEAP MEMORY AND CLEARS BOARD
 	~ChessBoard ();
 	
-	//RESET BOARD
+	//FREES MEMORY, CLEARS THEN RECONFIGURES BOARD TO STARTING POS
 	void resetBoard ();
 
-	//SUBMIT MOVE
+	//IF VALID, MOVE PIECE FROM start TO end, TAKE PIECE IF ONE IN end
+	//IF INVALID MOVE PRINT ERROR MESSAGE
+	//PRINTS (cout) OUTPUT INCL WHETHER PLAYER IN CHECK/STALE (-MATE) 
 	void submitMove (const char* start, const char* end);	
 	
 	//PRINT (cout) CURRENT STATE OF CHESSBOARD (debugging)
