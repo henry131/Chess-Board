@@ -97,10 +97,13 @@ int main() {
     cb.resetBoard();
     cout << endl;
     
+    //Wrong input
+    cb.submitMove("A1","A9"); //No (w turn)
+    cb.submitMove("A1","I8"); //No (w turn)
     //Testing obstacle
     cb.submitMove("C1", "A3"); //No (w turn)
     cb.submitMove("E1", "E2"); //No (w turn)
-    //Take colour of own piece?
+    //Take colour of own piece
     cb.submitMove("A1", "B1"); //No (w turn)
     cout << endl;
     
@@ -127,152 +130,74 @@ int main() {
     cout << endl;
     
     cout << "============================" << endl;
-    cout << "        Stalemate Test" << endl;
+    cout << "        Fool's Mate" << endl;
     cout << "============================" << endl;
     cout << endl;
 
     cb.resetBoard();
     cout << endl;
 
-    cb.submitMove("B2", "B4"); // move w pawn two spaces
+    cb.submitMove("F2", "F3");
+    cout << endl;
+    cb.submitMove("E7", "E5");
+    cout << endl;
+    cb.submitMove("G2", "G4");
+    cout << endl;
+    cb.submitMove("D8", "H4"); //Checkmate
+    cout << endl;
+    
+    cb.submitMove("A2","A3"); //No - game over
+    cout << endl;
+    
+    cout << "============================" << endl;
+    cout << "    Quickest Stalemate" << endl;
+    cout << "============================" << endl;
+    cout << endl;   
+    
+    cb.resetBoard();
     cout << endl;
 
-    cb.submitMove("B8", "C6"); // move b knight
+    cb.submitMove("E2", "E3");
     cout << endl;
-
-    cb.submitMove("C1", "A3"); // move w bishop 2 spaces
+    cb.submitMove("A7", "A5");
     cout << endl;
-    
-    cb.submitMove("E7", "E5"); // move b pawn two spaces
-    cout << endl;
-
-    cb.submitMove("B1", "C3"); // move w knight
-    cout << endl;
-
-    cb.submitMove("D8", "F6"); // move b queen diagonally
+    cb.submitMove("D1", "H5");
     cout << endl;
     
-    cb.submitMove("A1", "B1"); // move w rook horizontally
-    cout << endl;
-
-    cb.submitMove("F6", "D6"); // move b queen horizontally
-    cout << endl;
-
-    cb.submitMove("B1", "B2"); // move w rook vertically
+    cb.submitMove("F7", "F6"); //no - would put own king in check
     cout << endl;
     
-    cb.submitMove("D6", "D2");	// capture w pawn with b queen - check
-    cout << endl;				
-    
-    cb.submitMove("E1", "D2"); // capture b queen with w king
+    cb.submitMove("A8", "A6");
     cout << endl;
-    
-    cb.submitMove("E5", "E4"); // move b pawn one space
+    cb.submitMove("H5", "A5");
     cout << endl;
-    
-    cb.submitMove("F2", "F3"); // move w pawn one space
+    cb.submitMove("H7", "H5");
     cout << endl;
-    
-    cb.submitMove("E4", "F3"); // b pawn captures w pawn
+    cb.submitMove("H2", "H4");
     cout << endl;
-    
-    cb.submitMove("E2", "F3"); // capture b pawn with w pawn
+    cb.submitMove("A6", "H6");
     cout << endl;
-    
-    cb.submitMove("F8", "B4"); // capture w pawn with b bishop 
+    cb.submitMove("A5", "C7");
     cout << endl;
-    
-    cb.submitMove("C3", "D5"); // CANT move knight (puts k in check)
+    cb.submitMove("F7", "F6");
     cout << endl;
-    
-    cb.submitMove("B2", "B4"); // take bishop with w rook
+    cb.submitMove("C7", "D7");
     cout << endl;
-    
-    cb.submitMove("C6", "B4"); // take w rook with b knight
+    cb.submitMove("E8", "F7");
     cout << endl;
-    
-    cb.submitMove("A3", "B4"); // take b knight with w bishop 
+    cb.submitMove("D7", "B7");
     cout << endl;
-
-    cb.submitMove("B7", "B5"); // move b pawn 2 spaces
+    cb.submitMove("D8", "D3");
     cout << endl;
-    
-    cb.submitMove("D1", "E2"); // w queen to E2 - check
+    cb.submitMove("B7", "B8");
     cout << endl;
-    
-    cb.submitMove("G8", "E7"); // put b knight in the way
+    cb.submitMove("D3", "H7");
     cout << endl;
-    
-    cb.submitMove("B4", "E7"); // take b knight with w bishop
+    cb.submitMove("B8", "C8");
     cout << endl;
-    
-    cb.submitMove("A8", "B8"); // move b rook horizontally one space
+    cb.submitMove("F7", "G6");
     cout << endl;
-    
-    cb.submitMove("E2", "B5"); // take b pawn with w queen
-    cout << endl;
-    
-    cb.submitMove("F7", "F6"); // move b pawn one space
-    cout << endl;
-    
-    cb.submitMove("B5", "B8"); // take b rook with w queen
-    cout << endl;
-    
-    cb.submitMove("F6", "F5"); // move b pawn one space
-    cout << endl;
-    
-    cb.submitMove("B8", "C8"); // take b bishop with w queen - check
-    cout << endl;
-    
-    cb.submitMove("E8", "F7"); // move b king out of the way
-    cout << endl;
-    
-    cb.submitMove("C8", "H8"); // take b rook with w queen
-    cout << endl;
-    
-    cb.submitMove("F5", "F4"); // move b pawn one space
-    cout << endl;
-    
-    cb.submitMove("G2", "G4"); // move w pawn two spaces
-    cout << endl;
-    
-    cb.submitMove("G7", "G5"); // move b pawn two spaces
-    cout << endl;
-    
-    cb.submitMove("H2", "H4"); // move w pawn two spaces
-    cout << endl;
-    
-    cb.submitMove("H7", "H6"); // move b pawn one space
-    cout << endl;
-    
-    cb.submitMove("H4", "H5"); // move w pawn one space
-    cout << endl;
-    
-    cb.submitMove("D7", "D5"); // move b pawn two spaces
-    cout << endl;
-    
-    cb.submitMove("C3", "D5"); // take b pawn with w knight
-    cout << endl;
-    
-    cb.submitMove("A7", "A5"); // move b pawn two spaces
-    cout << endl;
-    
-    cb.submitMove("D5", "C7"); // take b pawn with w knight
-    cout << endl;
-    
-    cb.submitMove("F7", "G6"); // CANT move the b king
-    cout << endl;
-    
-    cb.submitMove("A5", "A4"); // move b pawn one space
-    cout << endl;
-    
-    cb.submitMove("E7", "B4"); // move w bishop
-    cout << endl;
-    
-    cb.submitMove("A4", "A3"); // move b pawn one space
-    cout << endl;
-    
-    cb.submitMove("B4", "A3"); // move w bishop - stalemate
+    cb.submitMove("C8", "E6"); //stalemate
     cout << endl;
 
     return 0;
