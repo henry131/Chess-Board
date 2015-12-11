@@ -6,7 +6,13 @@
 
 #include "Piece.h"
 
+//Type Definition for iterators of board map
+
 typedef map<string,Piece*> ::iterator it_type;
+
+//User testing trigger to run additional tests in ChessMain.cpp
+
+const bool user_tests = true;
 
 class ChessBoard {
 private:
